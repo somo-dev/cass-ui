@@ -1,11 +1,13 @@
 import { ButtonHTMLAttributes, FC, ReactNode } from "react";
 import "./button.css";
-import Loader from "@/loader/loader";
-import { resolveProps, sizeResolver } from "@/lib/utils/prop-resolver";
+import Loader from "@/core/compoennts/loader/loader";
+import { resolveProps } from "@/lib/utils/resolver";
 import { useTheme } from "@/theme/theme-provider/theme-provider";
+import { CassElementSizeValues, CassSize } from "@/core/theme.types";
 
+// Update ButtonProps to accept both string and ResponsiveSize
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  size?: string | number;
+  size?: CassSize | CassElementSizeValues | number;
   variant?: "solid" | "outline" | "glow" | "subtle" | "ghost" | "white";
   fullwidth?: boolean;
   rounded?: boolean;
@@ -16,12 +18,26 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   justify?: "start" | "center" | "end" | "space-between";
 }
 
-const Button: FC<ButtonProps> = (userProps) => {
-  const props = resolveProps(userProps);
+const Button: FC<ButtonProps> = ({
+  variant = "solid",
+  size = "md",
+  ...userProps
+}) => {
+  const props = resolveProps({ variant, size, ...userProps });
   const theme = useTheme();
+  const sizeResolver = (size: CassSize | number): string => {
+    if (typeof size === "number") {
+      return `${size}px`;
+    }
+
+    if (typeof size === "string") {
+      return `var(--size-${size})`; // Use CSS variable
+    }
+
+    return `var(--size-md)`; // Default size in case no value is provided
+  };
   const buttonSize = sizeResolver(props.size);
 
-  // Determine class for variant
   const variantClass = `button-${props.variant}`;
   const justifyClass = `justify-${props.justify}`;
 
@@ -48,7 +64,7 @@ const Button: FC<ButtonProps> = (userProps) => {
       {/* Loading and Content */}
       {props.isLoading ? (
         <span className="loading-text">
-          <Loader /> {props.loadingText || "Loading..."}
+          <Loader type="dots" /> {props.loadingText || "Loading..."}
         </span>
       ) : (
         props.children

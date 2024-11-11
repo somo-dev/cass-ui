@@ -1,0 +1,114 @@
+/* Keyframes */
+@keyframes spin {
+   0% {
+      transform: rotate(0deg);
+   }
+
+   100% {
+      transform: rotate(360deg);
+   }
+}
+
+@keyframes pulse-scale {
+   0%, 100% {
+      transform: scale(1);
+   }
+
+   50% {
+      transform: scale(0.5);
+   }
+}
+
+/* Ring Loader Style */
+.loader-ring {
+   display: inline-block;
+   margin-right: 9px;
+   width: var(--loader-size);
+   height: var(--loader-size);
+   border: 3px solid currentColor;
+   border-top-color: transparent;
+   border-radius: 50%;
+   animation: spin 0.6s linear infinite;
+   vertical-align: middle;
+   line-height: 0;
+   padding: 0;
+}
+
+
+/* Dots Loader Style */
+.loader-dots {
+   position: relative;
+   margin-right: 9px;
+   margin-bottom: calc(var(--loader-size) / 4);
+   width: var(--loader-size);
+   height: var(--loader-size);
+   vertical-align: middle;
+   line-height: 0;
+   padding: 0;
+}
+
+.loader-dots div {
+   position: absolute;
+   width: calc(var(--loader-size, 40px) / 5);
+   height: calc(var(--loader-size, 40px) / 5);
+   background-color: currentColor;
+   border-radius: 50%;
+   animation: pulse-scale 1s infinite;
+}
+
+/* Position each dot around the circle and set animation delays */
+.loader-dots div:nth-child(1) {
+   top: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   animation-delay: 0s;
+}
+
+.loader-dots div:nth-child(2) {
+   top: 15%;
+   left: 85%;
+   transform: translate(-50%, -50%);
+   animation-delay: 0.1s;
+}
+
+.loader-dots div:nth-child(3) {
+   top: 50%;
+   left: 100%;
+   transform: translate(-50%, -50%);
+   animation-delay: 0.2s;
+}
+
+.loader-dots div:nth-child(4) {
+   top: 85%;
+   left: 85%;
+   transform: translate(-50%, -50%);
+   animation-delay: 0.3s;
+}
+
+.loader-dots div:nth-child(5) {
+   top: 100%;
+   left: 50%;
+   transform: translateX(-50%);
+   animation-delay: 0.4s;
+}
+
+.loader-dots div:nth-child(6) {
+   top: 85%;
+   left: 15%;
+   transform: translate(-50%, -50%);
+   animation-delay: 0.5s;
+}
+
+.loader-dots div:nth-child(7) {
+   top: 50%;
+   left: 0;
+   transform: translate(-50%, -50%);
+   animation-delay: 0.6s;
+}
+
+.loader-dots div:nth-child(8) {
+   top: 15%;
+   left: 15%;
+   transform: translate(-50%, -50%);
+   animation-delay: 0.7s;
+}

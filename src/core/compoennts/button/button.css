@@ -1,0 +1,100 @@
+/* Basic Button Styles */
+.button {
+   font-size: 16px;
+   border: 1px solid #1890ff;
+   background-color: #1890ff;
+   color: #fff;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   outline: none;
+   overflow: hidden;
+   box-shadow: 0 0 0 rgba(24, 144, 255, 0.5);
+   font-family: system-ui, 'Segoe UI', ;
+}
+
+.button:active {
+   background-color: rgb(9, 88, 217);
+}
+
+/* Variant Styles */
+.button-solid {
+   background-color: var(--primary-color);
+   color: white;
+}
+
+.button-outline {
+   border: 2px solid var(--primary-color);
+   background: transparent;
+   color: var(--primary-color);
+}
+
+.button-glow {
+   background-color: var(--primary-color);
+   color: white;
+   box-shadow: 0 0 8px var(--primary-color);
+}
+
+.button-subtle {
+   background: rgba(0, 0, 0, 0.05);
+   color: var(--primary-color);
+}
+
+.button-ghost {
+   background: transparent;
+   color: var(--primary-color);
+}
+
+.button-white {
+   background-color: white;
+   color: var(--primary-color);
+}
+
+/* Full Width and Rounded */
+.button-fullwidth {
+   width: 100%;
+}
+
+.button-rounded {
+   border-radius: 9999px;
+}
+
+/* Loading Text Style */
+.loading-text {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+   font-size: 0.9em;
+   font-weight: bold;
+}
+
+/* Justify Content */
+.justify-start {
+   justify-content: flex-start;
+}
+
+.justify-center {
+   justify-content: center;
+}
+
+.justify-end {
+   justify-content: flex-end;
+}
+
+.justify-space-between {
+   justify-content: space-between;
+}
+
+/* Left and Right Section */
+.button-section {
+   display: flex;
+   align-items: center;
+}
+
+.button-section.left {
+   margin-right: 8px;
+}
+
+.button-section.right {
+   margin-left: 8px;
+}

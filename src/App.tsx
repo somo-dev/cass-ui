@@ -1,8 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import classes from "./Test.module.css";
-import Loader from "./loader/loader";
-import Button from "./button/button";
+import "./global.css";
+import Button from "./core/compoennts/button/button";
 function App() {
   const [isPulsing, setIsPulsing] = useState(false);
 
@@ -26,7 +25,13 @@ function App() {
         </span>
         Click me
       </button> */}
-      <Button /><Button variant="solid" size="md">Click Me</Button>
+      {/* <Button variant="solid" size="md">
+        Click Me
+      </Button> */}
+      <Button size={{ xs: "10px" }} isLoading loadingText="Processing...">
+        Submit
+      </Button>
+      <Button size={{ xs: '12px', sm: '16px', md: '40px' }}>Click</Button>
     </>
   );
 }
