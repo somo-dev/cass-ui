@@ -1,0 +1,31 @@
+@keyframes loaderIn {
+   from {
+      opacity: 0;
+      transform: translate(0%, -200%);
+   }
+
+   to {
+      opacity: 1;
+      transform: translate(0%, calc(-50% + 0.78rem));
+   }
+}
+
+@keyframes loaderOut {
+   from {
+      opacity: 1;
+      transform: translate(0%, calc(-50% + 0.78rem));
+   }
+
+   to {
+      opacity: 0;
+      transform: translate(0%, -200%);
+   }
+}
+
+.loader-transition-enter {
+   animation: loaderIn 0.25s forwards;
+}
+
+.loader-transition-exit {
+   animation: loaderOut 0.25s forwards;
+}

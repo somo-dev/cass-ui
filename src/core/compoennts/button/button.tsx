@@ -1,14 +1,24 @@
+// Button.tsx
 import { ButtonHTMLAttributes, FC, ReactNode } from "react";
 import "./button.css";
-import Loader from "@/core/compoennts/loader/loader";
+import Loader from "../loader/loader";
 import { resolveProps } from "@/lib/utils/resolver";
 import { useTheme } from "@/theme/theme-provider/theme-provider";
 import { CassElementSizeValues, CassSize } from "@/core/theme.types";
+import { useLoaderTransition } from "./use-loader-transition";
+import LoaderTransition from "./loader-transition";
 
-// Update ButtonProps to accept both string and ResponsiveSize
+export type ButtonVariant =
+  | "solid"
+  | "outline"
+  | "glow"
+  | "subtle"
+  | "ghost"
+  | "white";
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: CassSize | CassElementSizeValues | number;
-  variant?: "solid" | "outline" | "glow" | "subtle" | "ghost" | "white";
+  variant?: ButtonVariant;
   fullwidth?: boolean;
   rounded?: boolean;
   isLoading?: boolean;
@@ -21,20 +31,22 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: FC<ButtonProps> = ({
   variant = "solid",
   size = "md",
+  isLoading = false,
+  loadingText,
   ...userProps
 }) => {
   const props = resolveProps({ variant, size, ...userProps });
   const theme = useTheme();
+  const transitionState = useLoaderTransition(isLoading);
+
   const sizeResolver = (size: CassSize | number): string => {
     if (typeof size === "number") {
       return `${size}px`;
     }
-
     if (typeof size === "string") {
-      return `var(--size-${size})`; // Use CSS variable
+      return `var(--size-${size})`;
     }
-
-    return `var(--size-md)`; // Default size in case no value is provided
+    return `var(--size-md)`;
   };
   const buttonSize = sizeResolver(props.size);
 
@@ -54,23 +66,22 @@ const Button: FC<ButtonProps> = ({
         borderRadius: props.rounded ? "9999px" : "var(--border-radius)",
         justifyContent: props.justify,
       }}
-      disabled={props.disabled || props.isLoading}
+      disabled={props.disabled || isLoading}
     >
-      {/* Left Section */}
       {props.leftSection && (
         <span className="button-section left">{props.leftSection}</span>
       )}
 
-      {/* Loading and Content */}
-      {props.isLoading ? (
-        <span className="loading-text">
-          <Loader type="dots" /> {props.loadingText || "Loading..."}
-        </span>
-      ) : (
-        props.children
+      {(isLoading || transitionState !== "exited") && (
+        <LoaderTransition transitionState={transitionState}>
+          <span className="loading-text">
+            <Loader type="dots" /> {loadingText}
+          </span>
+        </LoaderTransition>
       )}
 
-      {/* Right Section */}
+      {!isLoading && transitionState === "exited" && props.children}
+
       {props.rightSection && (
         <span className="button-section right">{props.rightSection}</span>
       )}

@@ -4,7 +4,7 @@ import "./global.css";
 import Button from "./core/compoennts/button/button";
 function App() {
   const [isPulsing, setIsPulsing] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const handleClick = () => {
     // Trigger the pulse effect by setting isPulsing to true
     setIsPulsing(true);
@@ -12,6 +12,12 @@ function App() {
     // Remove the pulse effect after the animation duration (1 second here)
     setTimeout(() => {
       setIsPulsing(false);
+    }, 1000);
+  };
+  const autoChangeLoader = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
     }, 1000);
   };
   return (
@@ -31,7 +37,15 @@ function App() {
       <Button size={{ xs: "10px" }} isLoading loadingText="Processing...">
         Submit
       </Button>
-      <Button size={{ xs: '12px', sm: '16px', md: '40px' }}>Click</Button>
+      <Button
+        variant="outline"
+        size={"sm"}
+        isLoading={loading}
+        // loadingText="Loading"
+        onClick={autoChangeLoader}
+      >
+        Click Me
+      </Button>
     </>
   );
 }
