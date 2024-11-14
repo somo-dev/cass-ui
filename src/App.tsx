@@ -18,7 +18,7 @@ function App() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 3000);
   };
   return (
     <>
@@ -34,12 +34,11 @@ function App() {
       {/* <Button variant="solid" size="md">
         Click Me
       </Button> */}
-      <Button size={{ xs: "10px" }} isLoading loadingText="Processing...">
+      {/* <Button size={{ xs: "10px" }} isLoading loadingText="Processing...">
         Submit
-      </Button>
+      </Button> */}
       <Button
-        variant="outline"
-        size={"sm"}
+        // size={"sm"}
         isLoading={loading}
         // loadingText="Loading"
         onClick={autoChangeLoader}
