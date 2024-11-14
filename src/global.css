@@ -1,13 +1,6 @@
 :root {
    /* Color Variables */
-   --primary-color: #1890ff;
-   --primary-color-light: #40a9ff;
-   --primary-color-dark: #0050b3;
-   --secondary-color: #ff4d4f;
-   --secondary-color-light: #ff7875;
-   --secondary-color-dark: #a8071a;
-   --background-color: #f0f2f5;
-   --text-color: #ffffff;
+   
 
 
    --radius-default: calc(0.25rem * var(--scale));
