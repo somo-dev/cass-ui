@@ -1,4 +1,10 @@
-import { ButtonHTMLAttributes, FC, ReactNode, CSSProperties } from "react";
+import {
+  ButtonHTMLAttributes,
+  FC,
+  ReactNode,
+  CSSProperties,
+  useMemo,
+} from "react";
 import "./button.css";
 import Loader from "../loader/loader";
 import { resolveProps } from "@/lib/utils/resolver";
@@ -30,18 +36,20 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const classNames = (...classes: (string | false | undefined)[]) =>
   classes.filter(Boolean).join(" ");
 
-const resolveButtonSize = (size: CassSize | number): CSSProperties => {
-  const sizeMapping: Record<CassSize, CSSProperties> = {
-    xs: { minWidth: "var(--button-width-xs)", height: "var(--button-height-xs)" },
-    sm: { minWidth: "var(--button-width-sm)", height: "var(--button-height-sm)" },
-    md: { minWidth: "var(--button-width-md)", height: "var(--button-height-md)" },
-    lg: { minWidth: "var(--button-width-lg)", height: "var(--button-height-lg)" },
-    xl: { minWidth: "var(--button-width-xl)", height: "var(--button-height-xl)" },
-  };
+// Extracted CSS properties to a standalone configuration object
+const sizeConfig: Record<CassSize, CSSProperties> = {
+  xs: { minWidth: "var(--button-width-xs)", height: "var(--button-height-xs)" },
+  sm: { minWidth: "var(--button-width-sm)", height: "var(--button-height-sm)" },
+  md: { minWidth: "var(--button-width-md)", height: "var(--button-height-md)" },
+  lg: { minWidth: "var(--button-width-lg)", height: "var(--button-height-lg)" },
+  xl: { minWidth: "var(--button-width-xl)", height: "var(--button-height-xl)" },
+};
 
+// Utility to resolve size styling based on input type
+const resolveButtonSize = (size: CassSize | number): CSSProperties => {
   return typeof size === "number"
     ? { width: `${size}px`, height: `${size / 2.5}px`, padding: "0 16px" }
-    : { ...sizeMapping[size as CassSize], padding: "0 16px" };
+    : { ...sizeConfig[size as CassSize], padding: "0 16px" };
 };
 
 const Button: FC<ButtonProps> = ({
@@ -60,14 +68,20 @@ const Button: FC<ButtonProps> = ({
 }) => {
   const theme = useTheme();
   const transitionState = useLoaderTransition(isLoading);
-  const props = resolveProps({
-    variant,
-    size,
-    fullwidth,
-    rounded,
-    justify,
-    ...userProps,
-  });
+
+  // Memoized props for optimization
+  const props = useMemo(
+    () =>
+      resolveProps({
+        variant,
+        size,
+        fullwidth,
+        rounded,
+        justify,
+        ...userProps,
+      }),
+    [variant, size, fullwidth, rounded, justify, userProps]
+  );
 
   const buttonClass = classNames(
     "button",
@@ -77,7 +91,10 @@ const Button: FC<ButtonProps> = ({
     props.rounded && "button-rounded"
   );
 
-  const resolvedSize = resolveButtonSize(props.size);
+  const resolvedSize = useMemo(
+    () => resolveButtonSize(props.size),
+    [props.size]
+  );
 
   return (
     <button
@@ -93,6 +110,10 @@ const Button: FC<ButtonProps> = ({
         alignItems: "center",
       }}
       disabled={disabled || isLoading}
+      data-variant={variant}
+      data-size={size}
+      data-loading={isLoading}
+      data-fullwidth={fullwidth}
     >
       {leftSection && (
         <span className="button-section left">{leftSection}</span>

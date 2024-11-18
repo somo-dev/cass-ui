@@ -1,13 +1,6 @@
-import { CassElementSizeValues, CassSize } from "@/core/theme.types";
+type ResolveProps<T> = (userProps: Partial<T>, componentDefaults: T) => T;
 
-// Default props for all components
-const defaultProps = {
-  size: "md",
-  variant: "filled",
-  disabled: false,
-};
-
-const resolveProps = (userProps: any, componentDefaults = defaultProps) => {
+const resolveProps: ResolveProps<any> = (userProps, componentDefaults) => {
   return { ...componentDefaults, ...userProps };
 };
 

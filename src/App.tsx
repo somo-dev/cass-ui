@@ -38,6 +38,7 @@ function App() {
         Submit
       </Button> */}
       <Button
+        variant="outline"
         // size={"sm"}
         isLoading={loading}
         // loadingText="Loading"
