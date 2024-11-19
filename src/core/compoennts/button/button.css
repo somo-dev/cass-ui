@@ -34,6 +34,10 @@
     transform 0.1s ease;
 }
 
+.button:hover {
+  background-color: var(--hover-color);
+}
+
 .button[data-size="xs"] {
   font-size: var(--font-size-xs);
   height: var(--button-height-xs);

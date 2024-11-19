@@ -39,6 +39,7 @@ function App() {
       </Button> */}
       <Button
         variant="outline"
+        color="rgb(191, 33, 122)"
         // size={"sm"}
         isLoading={loading}
         // loadingText="Loading"

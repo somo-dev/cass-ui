@@ -12,7 +12,9 @@ import { useTheme } from "@/theme/theme-provider/theme-provider";
 import { CassElementSizeValues, CassSize } from "@/core/theme.types";
 import { useLoaderTransition } from "./use-loader-transition";
 import LoaderTransition from "./loader-transition";
+import { getColour } from "@/lib/get-color/get-color";
 
+// Button variants
 type ButtonVariant =
   | "solid"
   | "outline"
@@ -21,6 +23,7 @@ type ButtonVariant =
   | "ghost"
   | "white";
 
+// Button props interface
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: CassSize | CassElementSizeValues | number;
   variant?: ButtonVariant;
@@ -33,10 +36,22 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   justify?: "start" | "center" | "end" | "space-between";
 }
 
+// Default props
+const defaultProps: ButtonProps = {
+  variant: "solid",
+  size: "md",
+  fullwidth: false,
+  rounded: false,
+  justify: "center",
+  isLoading: false,
+  color: "blue",
+};
+
+// Utility for class names
 const classNames = (...classes: (string | false | undefined)[]) =>
   classes.filter(Boolean).join(" ");
 
-// Extracted CSS properties to a standalone configuration object
+// Size configurations
 const sizeConfig: Record<CassSize, CSSProperties> = {
   xs: { minWidth: "var(--button-width-xs)", height: "var(--button-height-xs)" },
   sm: { minWidth: "var(--button-width-sm)", height: "var(--button-height-sm)" },
@@ -45,43 +60,23 @@ const sizeConfig: Record<CassSize, CSSProperties> = {
   xl: { minWidth: "var(--button-width-xl)", height: "var(--button-height-xl)" },
 };
 
-// Utility to resolve size styling based on input type
+// Resolve button size
 const resolveButtonSize = (size: CassSize | number): CSSProperties => {
   return typeof size === "number"
     ? { width: `${size}px`, height: `${size / 2.5}px`, padding: "0 16px" }
     : { ...sizeConfig[size as CassSize], padding: "0 16px" };
 };
 
-const Button: FC<ButtonProps> = ({
-  variant = "solid",
-  size = "md",
-  fullwidth = false,
-  rounded = false,
-  isLoading = false,
-  loadingText,
-  leftSection,
-  rightSection,
-  justify = "center",
-  disabled,
-  children,
-  ...userProps
-}) => {
-  const theme = useTheme();
-  const transitionState = useLoaderTransition(isLoading);
-
-  // Memoized props for optimization
+// Button component
+const Button: FC<Partial<ButtonProps>> = ({ children, ...userProps }) => {
+  // Resolve props using resolveProps
   const props = useMemo(
-    () =>
-      resolveProps({
-        variant,
-        size,
-        fullwidth,
-        rounded,
-        justify,
-        ...userProps,
-      }),
-    [variant, size, fullwidth, rounded, justify, userProps]
+    () => resolveProps(userProps, defaultProps),
+    [userProps]
   );
+
+  const theme = useTheme();
+  const transitionState = useLoaderTransition(props.isLoading!);
 
   const buttonClass = classNames(
     "button",
@@ -92,8 +87,13 @@ const Button: FC<ButtonProps> = ({
   );
 
   const resolvedSize = useMemo(
-    () => resolveButtonSize(props.size),
+    () => resolveButtonSize(props.size!),
     [props.size]
+  );
+
+  const colorStyles = useMemo(
+    () => getColour(props.color || "blue", props.variant!),
+    [props.color, props.variant]
   );
 
   return (
@@ -102,31 +102,30 @@ const Button: FC<ButtonProps> = ({
       className={buttonClass}
       style={{
         ...resolvedSize,
-        backgroundColor:
-          props.variant === "solid" ? theme.primaryColor : "transparent",
+        ...colorStyles,
         borderRadius: props.rounded ? "9999px" : "var(--border-radius)",
         justifyContent: props.justify,
         display: "flex",
         alignItems: "center",
       }}
-      disabled={disabled || isLoading}
-      data-variant={variant}
-      data-size={size}
-      data-loading={isLoading}
-      data-fullwidth={fullwidth}
+      disabled={props.disabled || props.isLoading}
+      data-variant={props.variant}
+      data-size={props.size}
+      data-loading={props.isLoading}
+      data-fullwidth={props.fullwidth}
     >
-      {leftSection && (
-        <span className="button-section left">{leftSection}</span>
+      {props.leftSection && (
+        <span className="button-section left">{props.leftSection}</span>
       )}
 
       <span className="button-content">
-        {isLoading || transitionState !== "exited" ? (
+        {props.isLoading || transitionState !== "exited" ? (
           <LoaderTransition transitionState={transitionState}>
             <span
               className="loading-text"
               style={{ display: "flex", alignItems: "center" }}
             >
-              <Loader type="dots" /> {loadingText}
+              <Loader type="dots" /> {props.loadingText}
             </span>
           </LoaderTransition>
         ) : (
@@ -134,8 +133,8 @@ const Button: FC<ButtonProps> = ({
         )}
       </span>
 
-      {rightSection && (
-        <span className="button-section right">{rightSection}</span>
+      {props.rightSection && (
+        <span className="button-section right">{props.rightSection}</span>
       )}
     </button>
   );
